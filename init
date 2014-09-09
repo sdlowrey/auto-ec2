@@ -3,19 +3,17 @@
 # Create a key pair and save to KEYDIR
 # Create a security group for launching EC2 instances
 
-KEYDIR=~/projects/.aws
-KEY=ScaleTest
+source ec2.cfg
 
-if [ -r $KEYDIR/$KEY.pem ]; then
-    echo "$KEYDIR/$KEY.pem exists; skipping creation of new keypair"
+if [ -r $KEY_FILE ]; then
+    echo "$KEY_FILE exists; skipping creation of new keypair"
 else
-    aws ec2 create-key-pair --key-name $KEY --query 'KeyMaterial' --output text > $KEYDIR/$KEY.pem
-    chmod 400 $KEYDIR/$KEY.pem
-    echo "created: $KEYDIR/$KEY.pem"
+    aws ec2 create-key-pair --key-name $KEY --query 'KeyMaterial' --output text > $KEY_FILE
+    chmod 400 $KEY_FILE
+    echo "created: $KEY_FILE"
 fi
 
 # Could automate SG creation, but just use a known good one for now.  It's trivial.
-SG=sg-cfae8aaa
 if ! aws ec2 describe-security-groups --group-ids $SG > /dev/null 2>&1; then
     echo "Unable to find pre-defined security group $SG"
     exit 1
