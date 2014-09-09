@@ -1,0 +1,11 @@
+#!/bin/bash
+# Launch N instances
+
+source ec2.cfg
+
+COUNT=5
+
+ec2-run-instances $LINUX_AMI -t $LINUX_TYPE -k $KEY -g $SG -s $SUBNET -n $COUNT
+
+echo "Launched instances:"
+ec2din -F key-name=$KEY | awk '/INSTANCE/ {print $2}'
