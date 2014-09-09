@@ -6,5 +6,23 @@
 KEYDIR=~/projects/.aws
 KEY=ScaleTest
 
-aws ec2 create-key-pair --key-name $KEY --query 'KeyMaterial' --output text > $KEYDIR/$KEY.pem
+if [ -r $KEYDIR/$KEY.pem ]; then
+    echo "$KEYDIR/$KEY.pem exists; skipping creation of new keypair"
+else
+    aws ec2 create-key-pair --key-name $KEY --query 'KeyMaterial' --output text > $KEYDIR/$KEY.pem
+    chmod 400 $KEYDIR/$KEY.pem
+    echo "created: $KEYDIR/$KEY.pem"
+fi
 
+# Could automate SG creation, but just use a known good one for now.  It's trivial.
+SG=sg-cfae8aaa
+if ! aws ec2 describe-security-groups --group-ids $SG > /dev/null 2>&1; then
+    echo "Unable to find pre-defined security group $SG"
+    exit 1
+fi
+echo "Security Group OK"
+
+#VPC=vpc-de9c60bb
+#SG_NAME=ScaleGroup
+#SG_DESC="ScaleTest"
+#aws ec2 create-security-group --group-name $SG_NAME --description $SG_DESC --vpc-id $VPC
