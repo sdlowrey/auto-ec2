@@ -1,0 +1,10 @@
+#!/bin/bash
+# Set things up for EC2 management
+# Create a key pair and save to KEYDIR
+# Create a security group for launching EC2 instances
+
+KEYDIR=~/projects/.aws
+KEY=ScaleTest
+
+aws ec2 create-key-pair --key-name $KEY --query 'KeyMaterial' --output text > $KEYDIR/$KEY.pem
+
