@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source ec2.cfg
+
+all=$(ec2din -F key-name=$KEY | awk '/INSTANCE/ {print $2}')
+
+for inst in $all; do
+    echo "terminating $inst"
+    ec2kill $inst
+done
