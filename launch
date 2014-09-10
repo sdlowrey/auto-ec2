@@ -3,7 +3,29 @@
 
 source ec2.cfg
 
-ec2-run-instances $AMI -t $INST_TYPE -n $INST_COUNT -k $KEY -g $SG -s $SUBNET 
+RUN_INST="ec2-run-instances $AMI -t $INST_TYPE -n $INST_COUNT -k $KEY -g $SG -s $SUBNET"
 
-echo "Launched instances:"
-ec2din -F key-name=$KEY | awk '/INSTANCE/ {print $2}'
+instances=$($RUN_INST | awk '/INSTANCE/ {print $2}')
+
+# create a map of instance states
+declare -A state
+for i in $instances; do state[$i]=null; done
+
+echo "waiting for $INST_COUNT instances to reach 'running' state"
+running=0
+while (( running < $INST_COUNT )); do
+    for inst in $instances; do
+	[[ ${state[$inst]} == "running" ]] && continue
+	state[$inst]=$(ec2-describe-instance-status $inst | awk '/^INSTANCE/ {print $4}')
+	[[ ${state[$inst]} == "running" ]] && (( running++ ))
+    done
+    echo "$running of $INST_COUNT instances running"
+done
+
+# tag each instance
+for inst in $instances; do
+    #vol_id=$(ec2-create-volume -s $VOL_SIZE -z $VOL_ZONE | awk '/VOLUME/ {print $2}')
+    #ec2-attach-volume $vol_id -i $inst -d $VOL_DEV
+    ec2-create-tags $inst --tag Name=$INST_NAME
+done
+
