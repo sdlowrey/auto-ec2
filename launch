@@ -3,9 +3,7 @@
 
 source ec2.cfg
 
-COUNT=5
-
-ec2-run-instances $LINUX_AMI -t $LINUX_TYPE -k $KEY -g $SG -s $SUBNET -n $COUNT
+ec2-run-instances $AMI -t $INST_TYPE -n $INST_COUNT -k $KEY -g $SG -s $SUBNET 
 
 echo "Launched instances:"
 ec2din -F key-name=$KEY | awk '/INSTANCE/ {print $2}'
