@@ -23,9 +23,12 @@ while (( running < $INST_COUNT )); do
 done
 
 # tag each instance
+echo "tagging instances"
 for inst in $instances; do
     #vol_id=$(ec2-create-volume -s $VOL_SIZE -z $VOL_ZONE | awk '/VOLUME/ {print $2}')
     #ec2-attach-volume $vol_id -i $inst -d $VOL_DEV
-    ec2-create-tags $inst --tag Name=$INST_NAME
+    ec2-create-tags $inst --tag Name=$INST_NAME > /dev/null
 done
+
+echo "complete"
 
