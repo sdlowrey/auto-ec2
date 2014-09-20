@@ -2,6 +2,7 @@
 # Set things up for EC2 management
 # Create a key pair and save to KEYDIR
 # Create a security group for launching EC2 instances
+# Access and secret key IDs must be defined in environment (see .bashrc)
 
 source ec2.cfg
 
