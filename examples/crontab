@@ -1,0 +1,8 @@
+# Assume the launch and terminate commands are in $HOME/projects/auto-ec2
+
+# Launch more instances every 10m during the 21:00 hour (UTC) on Sep 22
+
+00-59/10 21 22 09 * $HOME/projects/auto-ec2/launch >> /tmp/launch.log 2>&1
+
+# Terminate all tagged instances at 22:00 on Sep 22
+00       22 22 09 * $HOME/projects/auto-ec2/terminate >> /tmp/terminate.log 2>&1
