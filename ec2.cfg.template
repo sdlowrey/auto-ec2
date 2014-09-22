@@ -1,0 +1,42 @@
+# THIS IS A TEMPLATE.  Change the values that start with "MY_" and rename
+# this file to ec2.cfg.
+
+# Environment variables for EC2 mgmt
+
+# These are to enable AWS CLI tools to run in cron or non-Amazon Linux
+# environments.  You can comment these out if running interactive only.
+export AWS_PATH=/opt/aws
+export PATH=$PATH:$AWS_PATH/bin
+export EC2_HOME=$AWS_PATH/apitools/ec2
+export JAVA_HOME=/usr/lib/jvm/jre
+
+# The name of a long-term trial run.  (Not currently used.)
+TRIAL_NAME=ScaleTest
+
+# Account credentials.  Reqired for cron.  If you define these in .bashrc
+# for interactive use, you should comment these out.
+export AWS_ACCESS_KEY=MY_ACCESS_KEY
+export AWS_SECRET_KEY=MY_SECRET_KEY
+
+# Security
+KEY=ScaleTest
+KEY_DIR=~/.aws
+KEY_FILE=$KEY_DIR/$KEY.pem
+SG=MY_SECURITY_GROUP_ID
+
+# Network -- only one VPC/subnet supported for now.  No support for Classic.
+VPC=MY_VPC_ID
+SUBNET=MY_SUBNET_ID
+
+# Use the latest HVM Amazon Linux AMI.  Change to whatever you like.
+AMI=ami-76817c1e
+
+# Instance details.
+INST_TYPE=t2.micro
+INST_COUNT=10
+INST_NAME=$TRIAL_NAME
+
+# Root EBS volume details
+VOL_SIZE=8
+VOL_ZONE=MY_ZONE
+VOL_DEV=/dev/sdb

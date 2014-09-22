@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source ec2.cfg
+BASE=$(dirname $0)
+source $BASE/ec2.cfg
 
 DESCRIBE="ec2-describe-instances --filter tag:Name=$INST_NAME"
 

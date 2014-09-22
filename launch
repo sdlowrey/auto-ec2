@@ -1,17 +1,22 @@
 #!/bin/bash
 # Launch N instances
 
-source ec2.cfg
+BASE=$(dirname $0)
+source $BASE/ec2.cfg
 
+echo "launching $INST_COUNT $INST_TYPE instances"
 RUN_INST="ec2-run-instances $AMI -t $INST_TYPE -n $INST_COUNT -k $KEY -g $SG -s $SUBNET"
-
 instances=$($RUN_INST | awk '/INSTANCE/ {print $2}')
+[[ $? == 0 ]] || {
+    echo "Failed to launch instances."
+    exit 1
+}
 
+echo "waiting for $INST_COUNT instances to reach 'running' state"
 # create a map of instance states
 declare -A state
 for i in $instances; do state[$i]=null; done
 
-echo "waiting for $INST_COUNT instances to reach 'running' state"
 running=0
 while (( running < $INST_COUNT )); do
     for inst in $instances; do
@@ -20,9 +25,9 @@ while (( running < $INST_COUNT )); do
 	[[ ${state[$inst]} == "running" ]] && (( running++ ))
     done
     echo "$running of $INST_COUNT instances running"
+    sleep 2
 done
 
-# tag each instance
 echo "tagging instances"
 for inst in $instances; do
     #vol_id=$(ec2-create-volume -s $VOL_SIZE -z $VOL_ZONE | awk '/VOLUME/ {print $2}')

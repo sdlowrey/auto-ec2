@@ -1,0 +1,5 @@
+Simple tools to control the launching, tagging, and termination of EC2 instances.
+
+The AWS credentials for the account being used to host the instances must be defined 
+in the shell/cron environment.  For shell, define AWS_ACCESS_KEY and AWS_SECRET_KEY
+in .bashrc.  For cron, define in the user account crontab.
