@@ -1,5 +1,7 @@
 # Automated EC2 Load Management
 
+_Update 2015: Use Hashicorp's Terraform.  It's much more capable._
+
 This is a small set of simple Linux command line tools that control the launching, 
 tagging, and termination of EC2 instances.
 
